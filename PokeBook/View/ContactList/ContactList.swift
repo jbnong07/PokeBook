@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ContactList: UITableView, UITableViewDataSource, UITableViewDelegate {
+final class ContactList: UITableView, UITableViewDelegate {
     var data: [String] = ["temp"]
     init() {
         super.init(frame: .zero, style: .plain)
@@ -18,6 +18,26 @@ final class ContactList: UITableView, UITableViewDataSource, UITableViewDelegate
         fatalError("init(coder:) has not been implemented")
     }
     
+    func addContact() {
+        let newIndex = data.count
+        data.append("hello")
+        self.insertRows(at: [IndexPath(row: newIndex, section: 0)], with: .automatic)//행 추가
+        DispatchQueue.main.async {//메인스레드에 작업을 예약함
+            if let cell = self.cellForRow(at: IndexPath(row: newIndex, section: 0)) as? ContactRow{
+                cell.configure()
+            }
+        }
+    }
+    
+    private func setupContactList() {
+        layer.cornerRadius = 15
+        layer.masksToBounds = true
+        self.dataSource = self
+        self.register(ContactRow.self, forCellReuseIdentifier: ContactRow.identifier)
+    }
+}
+
+extension ContactList: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
@@ -32,25 +52,4 @@ final class ContactList: UITableView, UITableViewDataSource, UITableViewDelegate
        
         return cell
     }
-    
-    func addContact() {
-        let newIndex = data.count
-        data.append("hello")
-        self.insertRows(at: [IndexPath(row: newIndex, section: 0)], with: .automatic)//행 추가
-        DispatchQueue.main.async {//메인스레드에 작업을 예ㅊ약함
-            if let cell = self.cellForRow(at: IndexPath(row: newIndex, section: 0)) as? ContactRow{
-                cell.configure()
-            }
-        }
-    }
-    
-    
-    private func setupContactList() {
-        layer.cornerRadius = 15
-        layer.masksToBounds = true
-        self.dataSource = self
-        self.register(ContactRow.self, forCellReuseIdentifier: ContactRow.identifier)
-    }
 }
-
-
