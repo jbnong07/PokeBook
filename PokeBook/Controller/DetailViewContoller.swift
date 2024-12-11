@@ -24,4 +24,34 @@ class DetailViewController: UIViewController {
         
     }
     
+    //포켓몬 사진 가져오는 메서드
+    private func fetchPokemonSprites() {
+        networkManager.fetchPokemonSprites { [weak self] imageURL in
+            guard let self = self, let imageURL = imageURL else { return }
+            DispatchQueue.main.async {//
+                self.detailView.imageView.setImage(url: imageURL)//ContactDetail/ImageView+Extension에 정의해둔 url을 바탕으로 이미지 설정하는 메서드
+                self.updateContactImageURL(url: imageURL)
+            }
+        }
+    }
+    //contactID에 해당하는 객체를 빌더에 전달하여 url 업데이트
+    private func updateContactImageURL(url: String) {
+        guard let contactID = contactID else { return }
+        do {
+            guard let contact = try coreDataStack.context.existingObject(with: contactID) as? ContactData else { return }
+            coreDataStack.updateContact(data: contact) { builder in
+                builder.setImageURL(to: url)
+            }
+        } catch {
+            print("Failed to update url: \(error.localizedDescription)")
+        }
+    }
+    
+    //최종적으로 클로저 정의
+    private func setupButtonAction() {
+        detailView.randomPokemonButtonAction = { [weak self] in
+            guard let self = self else { return }
+            self.fetchPokemonSprites()
+        }
+    }
 }
