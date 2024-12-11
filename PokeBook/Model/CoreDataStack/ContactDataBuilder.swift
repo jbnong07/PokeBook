@@ -14,16 +14,19 @@ final class ContactDataBuilder {
         self.contactData = contactData ?? ContactData(context: context)//업데이트를 위한 contactData를 주입 받은 경우 기존 객체 수정 / 없으면 새로운 객체 생성 함
     }
     
+    @discardableResult//체이닝 후 반환 값을 사용하지 않을 경우의 경고를 무시
     func setImageURL(to url: String) -> ContactDataBuilder {
         contactData.imageURL = url
         return self
     }
     
+    @discardableResult
     func setName(to name: String) -> ContactDataBuilder {
         contactData.name = name
         return self
     }
     
+    @discardableResult
     func setPhonenumber(to number: String) -> ContactDataBuilder {
         contactData.phoneNumber = number
         return self
