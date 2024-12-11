@@ -37,19 +37,4 @@ final class ContactList: UITableView, UITableViewDelegate {
     }
 }
 
-extension ContactList: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
-    }
-    
-    //셀을 구성하는 메서드
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ContactRow.identifier, for: indexPath) as? ContactRow else {
-            fatalError("Could not dequeue CustomCell")
-        }
-//        let productData = data[indexPath.row]
-        cell.configure()
-       
-        return cell
-    }
-}
+

@@ -29,6 +29,8 @@ final class ContactRow: UITableViewCell {
         setupLayout()
     }
     private func setupLayout() {
+        cellRow.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             cellRow.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             cellRow.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
