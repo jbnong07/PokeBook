@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController {
+final class DetailViewController: UIViewController {
     private let detailView: DetailView = DetailView()
     private let networkManager: NetworkManager = NetworkManager()
     private let coreDataStack: CoreDataStack = CoreDataStack.shared // 싱글톤 객체에 접근

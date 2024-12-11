@@ -7,7 +7,7 @@
 
 import CoreData
 
-class CoreDataStack {
+final class CoreDataStack {
     static let shared = CoreDataStack()
     private init() {}//모든 뷰컨에서 새롭게 선언하거나 주입할 필요 없이 접근할 수 있고 앱이 종료되는 시점까지도 사용될 가능성이 높은 객체라 싱글톤이 적합
     
