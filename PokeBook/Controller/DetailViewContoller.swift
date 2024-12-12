@@ -67,7 +67,6 @@ final class DetailViewController: UIViewController {
     
     private func updateExistingContact(contactID: NSManagedObjectID) {
         guard let contact = getContact(contactID: contactID) else { return }
-
         if currentImageURL == "" {
             if let imageURL = contact.imageURL { currentImageURL = imageURL }
         }

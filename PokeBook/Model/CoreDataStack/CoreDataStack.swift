@@ -55,6 +55,9 @@ final class CoreDataStack {
     // MARK: - Read
     func fetchContact() -> [ContactData] {//저장소에서 배열로 저장되어있는 데이터를 반환받는 메서드
         let fetchRequest: NSFetchRequest<ContactData> = ContactData.fetchRequest()
+        fetchRequest.sortDescriptors =  [//가져올 때부터 이름 순으로 정렬하여 가져오게 설정
+            NSSortDescriptor(keyPath: \ContactData.name, ascending: true)//keyPath를 이용하여 정렬할 기준이 되는 속성을 안전하게 전달
+        ]
         do {
             return try context.fetch(fetchRequest)
         } catch {
