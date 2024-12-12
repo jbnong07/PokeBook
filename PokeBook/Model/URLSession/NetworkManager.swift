@@ -43,7 +43,7 @@ final class NetworkManager {
     }
     
     // MARK: - generate ID
-    func generatePokemonID() -> Int {
+    func generatePokemonID() -> Int {//재사용할 일이 전혀 없고 오직 여기서만 사용해서 분리하지 않음
         /*
          각 숫자를 누적하고 랜덤한 수를 뽑은 뒤 누적된 수에 해당하는 포켓몬을 반환하여
          다른 확률로 나오는 포켓몬 뽑기
