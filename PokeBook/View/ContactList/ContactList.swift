@@ -7,8 +7,9 @@
 
 import UIKit
 
-final class ContactList: UITableView, UITableViewDelegate {
-    var data: [String] = ["temp"]
+final class ContactList: UITableView{
+    var data: [ContactData] = []
+    private let coreDataStack: CoreDataStack = CoreDataStack.shared
     init() {
         super.init(frame: .zero, style: .plain)
         setupContactList()
@@ -18,21 +19,28 @@ final class ContactList: UITableView, UITableViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func addContact() {
-        let newIndex = data.count
-        data.append("hello")
-        self.insertRows(at: [IndexPath(row: newIndex, section: 0)], with: .automatic)//행 추가
-        DispatchQueue.main.async {//메인스레드에 작업을 예약함
-            if let cell = self.cellForRow(at: IndexPath(row: newIndex, section: 0)) as? ContactRow{
-                cell.configure()
+    private func loadContacts() {
+        data = coreDataStack.fetchContact()
+        DispatchQueue.main.async {
+            self.reloadData()
+        }
+    }
+    
+    func addContact(contact: ContactDataInfo) {
+        coreDataStack.addContactByBuilder { builder in
+            builder.setName(to: contact.name)
+                .setPhonenumber(to: contact.phoneNumber)
+            if let imageURL = contact.imageURL {
+                builder.setImageURL(to: imageURL)
             }
         }
+        loadContacts()
     }
     
     private func setupContactList() {
         layer.cornerRadius = 15
         layer.masksToBounds = true
-        self.dataSource = self
+        
         self.register(ContactRow.self, forCellReuseIdentifier: ContactRow.identifier)
     }
 }

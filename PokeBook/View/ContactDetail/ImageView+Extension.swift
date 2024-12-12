@@ -9,18 +9,29 @@ import UIKit
 
 extension UIImageView {
     func setImage(url: String) {
-        guard let url = URL(string: url) else {
-            self.image = UIImage(systemName: "xmark")
+        if let cachedImage = ImageCacheManager.shared.getImage(for: url) {//cash 체크
+            self.image = cachedImage
             return
         }
         
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self, let data, error == nil else {//데이터와 에러를 체크하여 데이터가 없거나 에러가 있으면 종료
+        guard let url = URL(string: url) else {//캐시 없을 때는 네트워크로 요청
+            self.image = UIImage(systemName: "person.circle")
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in//간단한 요청이므로 URLSesison을 따로 만들지 않고 공유세션 사용
+            guard let self = self else { return }
+            guard let data, error == nil else {//데이터와 에러를 체크하여 데이터가 없거나 에러가 있으면 종료
                 print("Error: \(error?.localizedDescription ?? "Unknown")")
                 return
             }
+            guard let image = UIImage(data: data) else {//data를 기반으로 이미지 만들기 시도
+                print("failed to load image: \(error?.localizedDescription ?? "Unknown")")
+                return
+            }
             
-            guard let image = UIImage(data: data) else { return } //url로 받아온 데이터를 통해 UIImage 구성
+            ImageCacheManager.shared.saveImage(image, for: url.absoluteString)//다운로드한 이미지는 캐시로 저장하기
+            
             DispatchQueue.main.async {
                 self.image = image
             }

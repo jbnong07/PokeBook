@@ -20,9 +20,10 @@ final class ContactRow: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure() {
-        
-    }
+    func configure(with contact: ContactData) {
+            textLabel?.text = contact.name
+            detailTextLabel?.text = contact.phoneNumber
+        }
     
     private func setupContactRow() {
         contentView.addSubview(cellRow)

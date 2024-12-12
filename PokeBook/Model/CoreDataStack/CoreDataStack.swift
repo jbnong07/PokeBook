@@ -22,7 +22,7 @@ final class CoreDataStack {
         return container
     }()
     
-    // MARK: Context
+    // MARK: - Context
     var context: NSManagedObjectContext {//persistentContainer가 가진 viewContext를 쉽게 사용하기 위한 변수
         return persistentContainer.viewContext//PSC와 연결되어 데이터 작업이 가능하고 메인큐와 연관되어 메인 스레드에서 동작하는 객체를 연결해준다.
     }
@@ -36,7 +36,7 @@ final class CoreDataStack {
         }
     }
     
-    // MARK: Create
+    // MARK: - Create
     func addContact(imageURL: String, name: String, phoneNumber: String ) {
         //NSEntityDescription.insertNewObject(forEntityName:, into:)를 사용하지 않고 자동 생성된 서브클래스를 이용하여 컨텍스트에 넣어주어 하드 코딩으로 인한 런타임 에러 발생 가능성을 컴파일타임에서 잡아낼 수 있도록 하고 유지보수성도 높이며 간결한 코드로 가독성 또한 증가됨.
         let contact = ContactData(context: context)//초기화 시 context를 주입하여 바로 사용가능해진다는 것을 나중에 돌아볼 때 기억하기 위해 남겨둔 코드
@@ -53,7 +53,7 @@ final class CoreDataStack {
         saveContext()
     }
     
-    // MARK: Read
+    // MARK: - Read
     func fetchContact() -> [ContactData] {//저장소에서 배열로 저장되어있는 데이터를 반환받는 메서드
         let fetchRequest: NSFetchRequest<ContactData> = ContactData.fetchRequest()
         do {
@@ -64,14 +64,14 @@ final class CoreDataStack {
         }
     }
     
-    // MARK: Update
+    // MARK: - Update
     // add와 코드가 중복되지만 추가와 수정을 분리하는 것이 좀 더 장기적으로 나은 선택이라 생각하여 분리함.
     func updateContact(data: ContactData, builderBlock: (ContactDataBuilder) -> Void) {
         let builder = ContactDataBuilder(context: context, contactData: data)//수정할 기존 객체를 넣어줌
         builderBlock(builder)
     }
     
-    // MARK: Delete
+    // MARK: - Delete
     func deleteContact(data: ContactData) {
         context.delete(data)
         saveContext()

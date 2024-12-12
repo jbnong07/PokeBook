@@ -8,22 +8,26 @@
 import UIKit
 
 final class ListViewController: UIViewController {
-    private let contactList: ContactList = ContactList()
-    private let coreDataStack: CoreDataStack = CoreDataStack.shared
-    private var contacts: [ContactData] = []//core data에서 가져올 연락처 데이터
+    let contactList: ContactList = ContactList()
+    let coreDataStack: CoreDataStack = CoreDataStack.shared
+    var contacts: [ContactData] = []//core data에서 가져올 연락처 데이터
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        loadContacts()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
         setupNavigationTitle()
-        loadContacts()
+        setupTableView()
     }
     
-    // MARK: setupLayout
+    // MARK: - setupLayout
     private func setupLayout() {
         view.addSubview(contactList)
         contactList.translatesAutoresizingMaskIntoConstraints = false
-        contactList.delegate = self
+        contactList.register(UITableViewCell.self, forCellReuseIdentifier: "ContactCell")
         
         NSLayoutConstraint.activate([
             contactList.topAnchor.constraint(equalTo: view.topAnchor),
@@ -33,12 +37,19 @@ final class ListViewController: UIViewController {
         ])
     }
     
-    // MARK: setupNavigation
+    // MARK: - setup table view
+    private func setupTableView() {
+        contactList.dataSource = self
+        contactList.delegate = self
+    }
+    
+    // MARK: - setup navigation
     private func setupNavigationTitle() {
-        navigationItem.title = "Poke Bool"
+        navigationItem.title = "Poke Book"
         navigationItem.rightBarButtonItem = setNewContactButton()
     }
     
+    // MARK: - New contact button
     private func setNewContactButton() -> UIBarButtonItem {
         let addButton: UIButton = {
             let button = UIButton(type: .system)
@@ -57,17 +68,26 @@ final class ListViewController: UIViewController {
     
     private func moveToDetailView() {
         let detailVC = DetailViewController()
+        detailVC.contactID = nil // 새 연락처 추가를 위해 contactID를 비워둠
+        detailVC.delegate = self // 델리게이트 지정
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
-    // MARK: loadContacts
-    private func loadContacts() {
-           contacts = coreDataStack.fetchContact() // Core Data에서 연락처 데이터 로드
-           contactList.reloadData()
-       }
+    // MARK: - loadContacts
+    func loadContacts() {//무조건 reloadData를 하는 대신 새로운 셀이 추가된 경우에 호출되었을 때와 아닐 때를 구분
+        let previousCount = contacts.count
+        contacts = coreDataStack.fetchContact()
+        let newCount = contacts.count
+        
+        if newCount > previousCount {
+            let newIndexPaths = (previousCount..<newCount).map { IndexPath(row: $0, section: 0) }
+            contactList.insertRows(at: newIndexPaths, with: .automatic)
+        } else {
+            contactList.reloadData()
+        }
+    }
 }
 
-extension ListViewController: UITableViewDelegate {
-    
+#Preview {
+    UINavigationController(rootViewController: ListViewController())
 }
-
