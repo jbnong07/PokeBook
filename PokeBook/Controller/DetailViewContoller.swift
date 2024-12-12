@@ -41,7 +41,7 @@ final class DetailViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: contactID == nil ? "Add" : "Edit", style: .plain, target: self, action: #selector(saveContact))
     }
-    //MARK: - add or update
+    //MARK: - saveContact
     @objc private func saveContact() {
         if let contactID = contactID {
             updateExistingContact(contactID: contactID)
@@ -59,7 +59,6 @@ final class DetailViewController: UIViewController {
                 .setPhonenumber(to: detailView.phoneNumberTextField.text ?? "")
                 .setImageURL(to: currentImageURL)
         }
-        
     }
     
     private func updateExistingContact(contactID: NSManagedObjectID) {
@@ -68,7 +67,6 @@ final class DetailViewController: UIViewController {
             coreDataStack.updateContact(data: contact) { builder in
                 builder.setName(to: detailView.nameTextField.text ?? "")
                     .setPhonenumber(to: detailView.phoneNumberTextField.text ?? "")
-                    .setImageURL(to: currentImageURL)
             }
         } catch {
             print("Failed to update contact: \(error.localizedDescription)")
