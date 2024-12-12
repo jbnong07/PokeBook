@@ -8,7 +8,6 @@
 import UIKit
 
 final class ContactList: UITableView{
-    var data: [ContactData] = []
     private let coreDataStack: CoreDataStack = CoreDataStack.shared
     init() {
         super.init(frame: .zero, style: .plain)
@@ -19,13 +18,6 @@ final class ContactList: UITableView{
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func loadContacts() {
-        data = coreDataStack.fetchContact()
-        DispatchQueue.main.async {
-            self.reloadData()
-        }
-    }
-    
     func addContact(contact: ContactDataInfo) {
         coreDataStack.addContactByBuilder { builder in
             builder.setName(to: contact.name)
@@ -34,7 +26,9 @@ final class ContactList: UITableView{
                 builder.setImageURL(to: imageURL)
             }
         }
-        loadContacts()
+        DispatchQueue.main.async {
+            self.reloadData()
+        }
     }
     
     private func setupContactList() {
