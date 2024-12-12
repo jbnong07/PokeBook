@@ -43,7 +43,6 @@ final class CoreDataStack {
         contact.name = name
         contact.imageURL = imageURL
         contact.phoneNumber = phoneNumber
-        
         saveContext()
     }
     //속성이 많아짐에 따라 좀 더 유연하게 확장 가능한 방법 중 하나인 빌더 패턴을 이용한 메서드
@@ -69,6 +68,7 @@ final class CoreDataStack {
     func updateContact(data: ContactData, builderBlock: (ContactDataBuilder) -> Void) {
         let builder = ContactDataBuilder(context: context, contactData: data)//수정할 기존 객체를 넣어줌
         builderBlock(builder)
+        saveContext()
     }
     
     // MARK: - Delete
