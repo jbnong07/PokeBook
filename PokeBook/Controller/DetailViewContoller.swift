@@ -41,7 +41,7 @@ final class DetailViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: contactID == nil ? "Add" : "Edit", style: .plain, target: self, action: #selector(saveContact))
     }
-    //MARK: - saveContact
+    //MARK: - add or update
     @objc private func saveContact() {
         if let contactID = contactID {
             updateExistingContact(contactID: contactID)
@@ -68,8 +68,8 @@ final class DetailViewController: UIViewController {
             coreDataStack.updateContact(data: contact) { builder in
                 builder.setName(to: detailView.nameTextField.text ?? "")
                     .setPhonenumber(to: detailView.phoneNumberTextField.text ?? "")
+                    .setImageURL(to: currentImageURL)
             }
-            self.updateContactImageURL(url: currentImageURL)
         } catch {
             print("Failed to update contact: \(error.localizedDescription)")
         }
@@ -103,19 +103,6 @@ final class DetailViewController: UIViewController {
                 self.detailView.imageView.setImage(url: imageURL)//ContactDetail/ImageView+Extension에 정의해둔 url을 바탕으로 이미지 설정하는 메서드
                 self.currentImageURL = imageURL
             }
-        }
-    }
-    
-    //contactID에 해당하는 객체를 빌더에 전달하여 url 업데이트
-    private func updateContactImageURL(url: String) {
-        guard let contactID = contactID else { return }
-        do {
-            guard let contact = try coreDataStack.context.existingObject(with: contactID) as? ContactData else { return }
-            coreDataStack.updateContact(data: contact) { builder in
-                builder.setImageURL(to: url)
-            }
-        } catch {
-            print("Failed to update url: \(error.localizedDescription)")
         }
     }
     
