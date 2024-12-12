@@ -48,7 +48,8 @@ final class DetailView: UIView {
     }
     
     private func setupLayout() {
-        let views: [UIView] = [imageView, nameTextField, phoneNumberTextField]//TextField가 들어가면서 자동으로 UIView로 추론할 수 없게 되어 명시적으로 UIView배열을 만듬.
+        backgroundColor = .white
+        let views: [UIView] = [imageView, nameTextField, phoneNumberTextField, randomPokemonButton]//TextField가 들어가면서 자동으로 UIView로 추론할 수 없게 되어 명시적으로 UIView배열을 만듬.
         
         views.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
