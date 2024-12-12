@@ -38,13 +38,11 @@ extension ListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ContactCell", for: indexPath) as? ContactRow else {
+            fatalError()//반환값 없이 종료처리 어떻게 적절하게 할 수 있을까
+        }
         let contact = contacts[indexPath.row]
-        
-        var content = cell.defaultContentConfiguration()
-        content.text = contact.name
-        content.secondaryText = contact.phoneNumber
-        cell.contentConfiguration = content
+        cell.configure(with: contact)
         
         return cell
     }

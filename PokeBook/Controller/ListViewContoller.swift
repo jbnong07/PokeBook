@@ -27,7 +27,7 @@ final class ListViewController: UIViewController {
     private func setupLayout() {
         view.addSubview(contactList)
         contactList.translatesAutoresizingMaskIntoConstraints = false
-        contactList.register(UITableViewCell.self, forCellReuseIdentifier: "ContactCell")
+        contactList.register(ContactRow.self, forCellReuseIdentifier: "ContactCell")//테이블 뷰에 셀 등록
         
         NSLayoutConstraint.activate([
             contactList.topAnchor.constraint(equalTo: view.topAnchor),

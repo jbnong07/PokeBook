@@ -8,7 +8,12 @@
 import UIKit
 
 extension UIImageView {
-    func setImage(url: String) {
+    func setImage(url: String?) {
+        guard let url = url else {
+            self.image = UIImage(systemName: "person.circle")
+            return
+        }
+        
         if let cachedImage = ImageCacheManager.shared.getImage(for: url) {//cash 체크
             self.image = cachedImage
             return

@@ -21,9 +21,10 @@ final class ContactRow: UITableViewCell {
     }
     
     func configure(with contact: ContactData) {
-            textLabel?.text = contact.name
-            detailTextLabel?.text = contact.phoneNumber
-        }
+        cellRow.profileImage.setImage(url: contact.imageURL)
+        cellRow.name.text = contact.name
+        cellRow.number.text = contact.phoneNumber
+    }
     
     private func setupContactRow() {
         contentView.addSubview(cellRow)

@@ -53,13 +53,13 @@ final class ContactRowDetail: UIStackView {
         //오토레이아웃 설정
         NSLayoutConstraint.activate([
             profileImage.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.2),
-            profileImage.heightAnchor.constraint(equalToConstant: 100),
+            profileImage.heightAnchor.constraint(equalTo: profileImage.widthAnchor),
             
             name.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.4),
-            name.heightAnchor.constraint(equalToConstant: 100),
+            name.heightAnchor.constraint(equalTo: profileImage.heightAnchor),
             
             number.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.4),
-            number.heightAnchor.constraint(equalToConstant: 100)
+            number.heightAnchor.constraint(equalTo: profileImage.heightAnchor)
         ])
     }
 }
