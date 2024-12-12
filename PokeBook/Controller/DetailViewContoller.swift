@@ -37,7 +37,11 @@ final class DetailViewController: UIViewController {
     }
     // MARK: - setupNavigation
     private func setupNavigationBar() {
-        navigationItem.title = contactID == nil ? "New Pokemon" : "Edit Pokemon"
+        if let contact = getContact(contactID: contactID) {
+            navigationItem.title = contact.name
+        } else {
+            navigationItem.title = "New Pokemon"
+        }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: contactID == nil ? "Add" : "Edit", style: .plain, target: self, action: #selector(saveContact))
     }
@@ -62,24 +66,16 @@ final class DetailViewController: UIViewController {
     }
     
     private func updateExistingContact(contactID: NSManagedObjectID) {
-        do {
-            guard let contact = try coreDataStack.context.existingObject(with: contactID) as? ContactData else { return }
-            coreDataStack.updateContact(data: contact) { builder in
-                builder.setName(to: detailView.nameTextField.text ?? "")
-                    .setPhonenumber(to: detailView.phoneNumberTextField.text ?? "")
-            }
-        } catch {
-            print("Failed to update contact: \(error.localizedDescription)")
+        guard let contact = getContact(contactID: contactID) else { return }
+        coreDataStack.updateContact(data: contact) { builder in
+            builder.setName(to: detailView.nameTextField.text ?? "")
+                .setPhonenumber(to: detailView.phoneNumberTextField.text ?? "")
         }
     }
     // MARK: - loadContactData
     private func loadContactData(contactID: NSManagedObjectID) {
-        do {
-            guard let contact = try coreDataStack.context.existingObject(with: contactID) as? ContactData else { return }
-            populateData(contact: contact) // 데이터 바인딩
-        } catch {
-            print("Failed to load contact: \(error.localizedDescription)")
-        }
+        guard let contact = getContact(contactID: contactID) else { return }
+        populateData(contact: contact) // 데이터 바인딩
     }
     
     private func populateData(contact: ContactData) {
@@ -109,6 +105,20 @@ final class DetailViewController: UIViewController {
         detailView.randomPokemonButtonAction = { [weak self] in
             guard let self = self else { return }
             self.fetchPokemonSprites()
+        }
+    }
+    
+    // MARK: - get contact with id
+    private func getContact(contactID: NSManagedObjectID?) -> ContactData? {
+        guard let contactID = contactID else { return nil }
+        do {
+            guard let contact = try coreDataStack.context.existingObject(with: contactID) as? ContactData else {
+                return nil
+            }
+            return contact
+        } catch {
+            print("Failed to load contact: \(error.localizedDescription)")
+            return nil
         }
     }
     
