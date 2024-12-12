@@ -67,9 +67,13 @@ final class DetailViewController: UIViewController {
     
     private func updateExistingContact(contactID: NSManagedObjectID) {
         guard let contact = getContact(contactID: contactID) else { return }
+        if currentImageURL == "" {
+            if let imageURL = contact.imageURL { currentImageURL = imageURL }
+        }
         coreDataStack.updateContact(data: contact) { builder in
             builder.setName(to: detailView.nameTextField.text ?? "")
                 .setPhonenumber(to: detailView.phoneNumberTextField.text ?? "")
+                .setImageURL(to: currentImageURL)
         }
     }
     // MARK: - loadContactData
