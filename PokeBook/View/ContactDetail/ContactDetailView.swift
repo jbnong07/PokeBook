@@ -11,6 +11,10 @@ final class DetailView: UIView {
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = imageView.frame.width / 2 // 둥근 모양을 위해 코너 반지름 설정
+        imageView.layer.borderWidth = 2 // 테두리 두께
+        imageView.layer.borderColor = UIColor.lightGray.cgColor // 테두리 색상
+        imageView.clipsToBounds = true // 테두리를 잘라내도록 설정
         return imageView
     }()
     
@@ -47,6 +51,12 @@ final class DetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {//뷰의 레이아웃이 설정된 후 호출되어 프레임을 바탕으로 원형 테두리를 설정할 수 있게 함
+        super.layoutSubviews()
+        imageView.layer.cornerRadius = imageView.frame.width / 2
+    }
+    
+    // MARK: - setup layout
     private func setupLayout() {
         backgroundColor = .white
         let views: [UIView] = [imageView, nameTextField, phoneNumberTextField, randomPokemonButton]//TextField가 들어가면서 자동으로 UIView로 추론할 수 없게 되어 명시적으로 UIView배열을 만듬.
@@ -77,6 +87,7 @@ final class DetailView: UIView {
         ])
     }
     
+    // MARK: - setup button action
     private func setupRandomPokemonButtonAction() {
         randomPokemonButton.addAction(UIAction { [weak self] _ in//addTarget 대신 ios14 이상부터 지원하는 addAction 사용 @objc 메서드 없이 바로 클로저 기반으로 처리 가능!
             guard let self = self else { return }
