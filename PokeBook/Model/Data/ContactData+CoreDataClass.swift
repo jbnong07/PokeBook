@@ -11,5 +11,5 @@ import CoreData
 
 
 final public class ContactData: NSManagedObject {
-    
+    //왜 이렇게 분리해서 만들어준 걸까
 }

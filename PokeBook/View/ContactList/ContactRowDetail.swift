@@ -10,7 +10,7 @@ final class ContactRowDetail: UIStackView {
     //stack에 들어갈 뷰 인스턴스 생성
     let profileImage: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(systemName: "plus")
+        image.image = UIImage(systemName: "person.circle")
         
         return image
     }()
