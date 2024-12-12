@@ -21,7 +21,7 @@ extension ListViewController: UITableViewDelegate {
         detailVC.delegate = self
         navigationController?.pushViewController(detailVC, animated: true)
     }
-    
+    // MARK: - delete method
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let contact = contacts[indexPath.row]
